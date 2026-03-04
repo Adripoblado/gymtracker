@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,9 @@ public class User implements UserDetails{
     @Column(nullable = false, length = 255)
     private String password;
     private String role;
+
+    @Embedded
+    private BodyMetrics bodyMetrics;
 
     public User() {
     }
@@ -75,6 +79,14 @@ public class User implements UserDetails{
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public BodyMetrics getBodyMetrics() {
+        return bodyMetrics;
+    }
+
+    public void setBodyMetrics(BodyMetrics bodyMetrics) {
+        this.bodyMetrics = bodyMetrics;
     }
 
     @Override
