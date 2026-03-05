@@ -8,6 +8,7 @@ import com.adripoblado.gymtracker.gymtracker.model.User;
 import com.adripoblado.gymtracker.gymtracker.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
@@ -21,6 +22,8 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
+    @SuppressWarnings("null")
+    @Transactional
     public UpdateUserDTO updateUser(UpdateUserDTO entity) {
         User user = userRepository.findByUsername(entity.getUsername()).orElseThrow(() -> new EntityNotFoundException("User not found"));
         

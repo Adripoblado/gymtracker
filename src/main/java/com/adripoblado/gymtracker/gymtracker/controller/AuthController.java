@@ -33,14 +33,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDTO entity) {
-        boolean success = authenticationService.login(entity);
-        if (success) {
-            System.out.println("User logged in successfully: " + entity.username());
-            return "Login successful!";
-        } else {
-            System.out.println("Failed login attempt for username: " + entity.username());
-            return "Invalid username or password.";
-        }
+        
+        return authenticationService.login(entity);
     }
     
 }

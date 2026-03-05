@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,13 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     public boolean register(RegisterRequestDTO request) {
@@ -40,19 +43,21 @@ public class AuthenticationService {
         return true;
     }
 
-    public boolean login(LoginRequestDTO request) {
+    public String login(LoginRequestDTO request) {
         String username = request.username();
         String password = request.password();
 
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            return false;
+            return null;
         }
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+            authenticationManager.authenticate(authToken);
+            SecurityContextHolder.getContext().setAuthentication(authToken);
         } catch (Exception e) {
-            return false;
+            return null;
         }    
-        return true;   
+        return jwtService.generateToken(username);   
     }
 }
