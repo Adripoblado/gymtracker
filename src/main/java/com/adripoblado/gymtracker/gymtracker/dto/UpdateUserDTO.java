@@ -1,7 +1,5 @@
 package com.adripoblado.gymtracker.gymtracker.dto;
 
-import org.hibernate.sql.Update;
-
 import jakarta.validation.Valid;
 
 public class UpdateUserDTO {

@@ -8,7 +8,11 @@ import com.adripoblado.gymtracker.gymtracker.service.UserService;
 
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.security.Principal;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/users")
@@ -26,4 +30,10 @@ public class UserController {
         UpdateUserDTO response = userService.updateUser(entity);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> getMethodName(Principal principal) {
+        return ResponseEntity.ok(principal.getName());
+    }
+    
 }
