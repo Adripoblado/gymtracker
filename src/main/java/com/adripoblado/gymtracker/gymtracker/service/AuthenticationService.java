@@ -1,5 +1,7 @@
 package com.adripoblado.gymtracker.gymtracker.service;
 
+import java.security.Security;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,16 +50,20 @@ public class AuthenticationService {
         String password = request.password();
 
         Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
+        try {
+            user.get();        
+        } catch (NoSuchElementException e) {
             return null;
         }
+
         try {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
             authenticationManager.authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            //TODO: noted for removal: SecurityContextHolder.getContext().setAuthentication(authToken);
         } catch (Exception e) {
             return null;
         }    
-        return jwtService.generateToken(username);   
+
+        return jwtService.generateToken(user.get());   
     }
 }
