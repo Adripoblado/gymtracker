@@ -26,31 +26,24 @@ public class UserController {
         this.securityUtils = securityUtils;
     }
 
-    @PutMapping("/me")
+    @PutMapping("/me/update")
     public ResponseEntity<UpdateUserDTO> updateUser(@RequestBody UpdateUserDTO entity) {
-        User user = securityUtils.getCurrentUser();
-        UpdateUserDTO response = new UpdateUserDTO();
-
-        if (user == null) {
-            response.setName("Unauthorized");
-            return ResponseEntity.status(401).body(response);
+        UpdateUserDTO response = userService.updateUser(entity);
+        if (response == null) {
+            return ResponseEntity.status(401).build();
         }
-
-        response = userService.updateUser(entity);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> getMethodName() {
+    @GetMapping("/me")
+    public ResponseEntity<String> getSelfData() {
         User user = securityUtils.getCurrentUser();
 
         if (user == null) {
             return ResponseEntity.status(401).body("Unauthorized");
         }
 
-        System.out.println("Authenticated user: " + user.getUsername());
-        System.out.println("Authenticated user details: " + user.toString());
-        return ResponseEntity.ok("Authenticated user: " + user.getUsername());
+        return ResponseEntity.ok("Authenticated user: " + user.toString());
     }
     
 }

@@ -19,12 +19,10 @@ public class SecurityUtils {
     public User getCurrentUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     
-    // Si es anonymousUser o null, no hay nadie logueado correctamente
     if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
         return null;
     }
 
-    // Normalmente el principal es un UserDetails (el username)
     String username = auth.getName(); 
     return userRepository.findByUsername(username).orElse(null);
 }

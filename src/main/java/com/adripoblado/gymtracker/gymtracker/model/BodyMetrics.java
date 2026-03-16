@@ -1,9 +1,18 @@
 package com.adripoblado.gymtracker.gymtracker.model;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
-@Embeddable
+@Entity
+@Table(name = "body_metrics")
 public class BodyMetrics {
+
+    @Id
+    private long id;
 
     private int age;
     private int weight;
@@ -25,6 +34,11 @@ public class BodyMetrics {
     private int metabolicAge;
     private int basalMetabolicRate;
     private int bodyMassIndex;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public BodyMetrics() {
     }
@@ -195,5 +209,37 @@ public class BodyMetrics {
         this.bodyMassIndex = bodyMassIndex;
     }
 
-    
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "BodyMetrics{" +
+                "age=" + age +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", chest=" + chest +
+                ", shoulders=" + shoulders +
+                ", waist=" + waist +
+                ", hips=" + hips +
+                ", biceps=" + biceps +
+                ", forearm=" + forearm +
+                ", thigh=" + thigh +
+                ", calf=" + calf +
+                ", neck=" + neck +
+                ", bodyFatPercentage=" + bodyFatPercentage +
+                ", muscleMassPercentage=" + muscleMassPercentage +
+                ", waterPercentage=" + waterPercentage +
+                ", boneMassPercentage=" + boneMassPercentage +
+                ", visceralFatLevel=" + visceralFatLevel +
+                ", metabolicAge=" + metabolicAge +
+                ", basalMetabolicRate=" + basalMetabolicRate +
+                ", bodyMassIndex=" + bodyMassIndex +
+                '}';
+    }
 }

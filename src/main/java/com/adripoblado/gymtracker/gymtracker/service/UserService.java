@@ -8,7 +8,6 @@ import com.adripoblado.gymtracker.gymtracker.model.User;
 import com.adripoblado.gymtracker.gymtracker.repository.UserRepository;
 import com.adripoblado.gymtracker.gymtracker.security.SecurityUtils;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -24,13 +23,16 @@ public class UserService {
         this.securityUtils = securityUtils;
     }
 
-    @SuppressWarnings("null")
     @Transactional
     public UpdateUserDTO updateUser(UpdateUserDTO dto) {
-        String username = securityUtils.getCurrentUser().getUsername();
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        
+        User user = securityUtils.getCurrentUser();
+
+        if (user == null) {
+            return null;
+        }
+
         userMapper.updateUserFromDTO(dto, user);
+
         User updatedUser = userRepository.save(user);
     
         return userMapper.toResponseDTO(updatedUser);

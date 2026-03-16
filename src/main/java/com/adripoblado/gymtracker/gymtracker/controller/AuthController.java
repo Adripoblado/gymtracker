@@ -24,12 +24,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequestDTO entity) {
-        boolean success = authenticationService.register(entity);
-        if (success) {
-            return "User registered successfully!";
-        } else {
-            return "Username or email already exists.";
-        }
+        return authenticationService.register(entity);
     }
 
     @PostMapping("/login")

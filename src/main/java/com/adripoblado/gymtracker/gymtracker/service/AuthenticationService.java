@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,18 +30,22 @@ public class AuthenticationService {
         this.jwtService = jwtService;
     }
 
-    public boolean register(RegisterRequestDTO request) {
+    public String register(RegisterRequestDTO request) {
         String username = request.username();
         String email = request.email();
         String password = request.password();
 
-        if (userRepository.findByUsername(username) != null || userRepository.findByEmail(email) != null) {
-            return false;
+        if (username == null || email == null || password == null) {
+            return "Username, email, and password are required.";
+        }
+
+        if (userRepository.existsByUsername(username) || userRepository.existsByEmail(email)) {
+            return "Username or email already exists.";
         }
 
         String encodedPassword = passwordEncoder.encode(password);
         userRepository.save(new User(username, email, encodedPassword, RoleEnum.USER.name()));
-        return true;
+        return "User registered successfully.";
     }
 
     public String login(LoginRequestDTO request) {
@@ -59,7 +62,6 @@ public class AuthenticationService {
         try {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
             authenticationManager.authenticate(authToken);
-            //TODO: noted for removal: SecurityContextHolder.getContext().setAuthentication(authToken);
         } catch (Exception e) {
             return null;
         }    

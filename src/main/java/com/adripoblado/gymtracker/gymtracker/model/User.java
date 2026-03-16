@@ -7,14 +7,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "users")
 public class User implements UserDetails{
 
     @Id
@@ -28,7 +32,7 @@ public class User implements UserDetails{
     private String password;
     private String role;
 
-    @Embedded
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private BodyMetrics bodyMetrics;
 
     public User() {
@@ -87,6 +91,9 @@ public class User implements UserDetails{
 
     public void setBodyMetrics(BodyMetrics bodyMetrics) {
         this.bodyMetrics = bodyMetrics;
+        if (bodyMetrics != null) {
+            bodyMetrics.setUser(this);
+        }
     }
 
     @Override
@@ -101,7 +108,7 @@ public class User implements UserDetails{
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
-                ", bodyMetrics=" + bodyMetrics +
+                ", bodyMetrics=" + bodyMetrics.toString() +
                 '}';
     }
 }
