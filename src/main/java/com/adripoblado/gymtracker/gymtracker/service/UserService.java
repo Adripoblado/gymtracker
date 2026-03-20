@@ -35,7 +35,7 @@ public class UserService {
 
         User updatedUser = userRepository.save(user);
     
-        return userMapper.toResponseDTO(updatedUser);
+        return userMapper.toUpdateDTO(updatedUser);
     }
 
     @Transactional

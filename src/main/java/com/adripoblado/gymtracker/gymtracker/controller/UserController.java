@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adripoblado.gymtracker.gymtracker.dto.UpdateUserDTO;
-import com.adripoblado.gymtracker.gymtracker.dto.UserResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.mapper.UserMapper;
 import com.adripoblado.gymtracker.gymtracker.model.User;
 import com.adripoblado.gymtracker.gymtracker.security.SecurityUtils;
