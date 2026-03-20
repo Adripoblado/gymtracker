@@ -12,7 +12,11 @@ target/
 .settings
 .springBeans
 .sts4-cache
-application.properties
+
+# --- Sensible Configuration (CRITICAL) ---
+src/main/resources/application.properties
+src/main/resources/application.yml
+.env
 
 ### IntelliJ IDEA ###
 .idea
