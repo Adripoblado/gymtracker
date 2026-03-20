@@ -17,13 +17,13 @@ public class SecurityUtils {
     }
 
     public User getCurrentUser() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     
-    if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
-        return null;
-    }
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return null;
+        }
 
-    String username = auth.getName(); 
-    return userRepository.findByUsername(username).orElse(null);
-}
+        String username = auth.getName(); 
+        return userRepository.findByUsername(username).orElse(null);
+    }
 }

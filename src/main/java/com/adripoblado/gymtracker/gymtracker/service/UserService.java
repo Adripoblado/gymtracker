@@ -37,4 +37,13 @@ public class UserService {
     
         return userMapper.toResponseDTO(updatedUser);
     }
+
+    @Transactional
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
 }

@@ -108,7 +108,7 @@ public class User implements UserDetails{
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
-                ", bodyMetrics=" + bodyMetrics.toString() +
+                ", bodyMetrics=" + (bodyMetrics != null ? bodyMetrics.toString() : null) +
                 '}';
     }
 }

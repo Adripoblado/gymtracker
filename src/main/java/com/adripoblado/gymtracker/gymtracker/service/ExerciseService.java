@@ -1,0 +1,86 @@
+package com.adripoblado.gymtracker.gymtracker.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.adripoblado.gymtracker.gymtracker.dto.CreateExerciseDTO;
+import com.adripoblado.gymtracker.gymtracker.dto.ExerciseRequestDTO;
+import com.adripoblado.gymtracker.gymtracker.dto.ExerciseResponseDTO;
+import com.adripoblado.gymtracker.gymtracker.mapper.ExerciseMapper;
+import com.adripoblado.gymtracker.gymtracker.model.Exercise;
+import com.adripoblado.gymtracker.gymtracker.model.User;
+import com.adripoblado.gymtracker.gymtracker.model.enums.Equipment;
+import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
+import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
+import com.adripoblado.gymtracker.gymtracker.repository.ExerciseRepository;
+import com.adripoblado.gymtracker.gymtracker.security.SecurityUtils;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class ExerciseService {
+
+    final ExerciseRepository exerciseRepository;
+    final SecurityUtils securityUtils;
+    private final ExerciseMapper exerciseMapper;
+
+    public ExerciseService(ExerciseRepository exerciseRepository, SecurityUtils securityUtils, ExerciseMapper exerciseMapper) {
+        this.exerciseRepository = exerciseRepository;
+        this.securityUtils = securityUtils;
+        this.exerciseMapper = exerciseMapper;
+    }
+
+    @Transactional
+    public String createGlobalExercise(CreateExerciseDTO request) {
+        System.out.println("Attempting to create global exercise: " + request.name());
+        Exercise exercise = new Exercise(request, null);
+        exerciseRepository.save(exercise);
+        return "Global exercise created successfully";
+    }
+
+    @Transactional
+    public String createCustomExercise(CreateExerciseDTO request, User user) {
+        Exercise exercise = new Exercise(request, user);
+        exerciseRepository.save(exercise);
+        return "Custom exercise created successfully";
+    }
+
+    public List<ExerciseResponseDTO> getAllGlobalExercises() {
+        List<Exercise> exercises = exerciseRepository.findByIsCustom(false).orElse(List.of());
+        return exerciseMapper.toDtoList(exercises);
+    }
+
+    public List<ExerciseResponseDTO> getCustomExercise(MuscleGroup muscleGroup, ExerciseType exerciseType) {
+        List<Exercise> exercises = exerciseRepository.findByMuscleGroupAndExerciseType(muscleGroup, exerciseType).orElse(List.of());
+        return exerciseMapper.toDtoList(exercises);
+    }
+
+    public String updateCustomExercise(Long exerciseId, ExerciseRequestDTO request, String username) {
+        Exercise exercise = exerciseRepository.findById(exerciseId).orElseThrow(() -> new RuntimeException("Exercise not found"));
+        
+        if (exercise.isCustom() && exercise.getUser().getUsername().equals(username)) {
+            exercise.setName(request.getName());
+            exercise.setMuscleGroup(request.getMuscleGroup());
+            exercise.setExerciseType(request.getExerciseType());
+            exercise.setEquipment(request.getEquipment());
+            exerciseRepository.save(exercise);
+        } else {
+            throw new RuntimeException("Unauthorized to update this exercise");
+        }
+
+        return "Custom exercise updated successfully";
+    }
+
+    public String deleteExercise(Long exerciseId, String username) {
+        Exercise exercise = exerciseRepository.findById(exerciseId).orElseThrow(() -> new RuntimeException("Exercise not found"));
+        
+        if (exercise.isCustom() && exercise.getUser().getUsername().equals(username)) {
+            exerciseRepository.delete(exercise);
+        } else {
+            throw new RuntimeException("Unauthorized to delete this exercise");
+        }
+        
+        return "Exercise deleted successfully";
+    }
+}

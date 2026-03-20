@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import com.adripoblado.gymtracker.gymtracker.dto.UpdateUserDTO;
+import com.adripoblado.gymtracker.gymtracker.dto.UserResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.model.User;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -15,5 +16,6 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     void updateUserFromDTO(UpdateUserDTO dto, @MappingTarget User user);
 
-    UpdateUserDTO toResponseDTO(User user);
+    UpdateUserDTO toUpdateDTO(User user);
+    UserResponseDTO toResponseDTO(User user);
 }

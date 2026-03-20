@@ -1,9 +1,9 @@
 package com.adripoblado.gymtracker.gymtracker.service;
 
-import java.security.Security;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,11 +23,15 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
+    @Value("${auth.admin.code}")
+    private final String adminCode;
+
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, @Value("${auth.admin.code}") String adminCode) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.adminCode = adminCode;
     }
 
     public String register(RegisterRequestDTO request) {
@@ -44,7 +48,14 @@ public class AuthenticationService {
         }
 
         String encodedPassword = passwordEncoder.encode(password);
-        userRepository.save(new User(username, email, encodedPassword, RoleEnum.USER.name()));
+
+        RoleEnum role = RoleEnum.USER; // Default role for new users
+
+        if (request.rolecode() != null && request.rolecode().equals(adminCode)) {
+            role = RoleEnum.ADMIN; // Assign admin role if the correct code is provided
+        }
+
+        userRepository.save(new User(username, email, encodedPassword, role.name()));
         return "User registered successfully.";
     }
 
