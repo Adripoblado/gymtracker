@@ -100,6 +100,6 @@ Before running the project, ensure you have the following installed:
 
 ## ✒️ Author
 
-* **Adrián Cervera** - *Lead Developer* - [YourGitHub](https://github.com/Adripoblado)
+* **Adrián Cervera** - *Lead Developer* - [Adripoblado](https://github.com/Adripoblado)
 
 ---
