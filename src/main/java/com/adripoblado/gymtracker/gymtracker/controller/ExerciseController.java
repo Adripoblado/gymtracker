@@ -34,6 +34,11 @@ public class ExerciseController {
     public ResponseEntity<List<ExerciseResponseDTO>> listGlobalExercises() {
         return ResponseEntity.ok(exerciseService.getAllGlobalExercises());
     }
+
+    @GetMapping("/list/custom")
+    public ResponseEntity<List<ExerciseResponseDTO>> listCustomExercises() {
+        return ResponseEntity.ok(exerciseService.getAllCustomExercises());
+    }
     
 
     @PostMapping("/create/global")
@@ -51,5 +56,23 @@ public class ExerciseController {
         System.out.println("Creating global exercise: " + request.name() + " by admin: " + user.getUsername());
         return ResponseEntity.ok(exerciseService.createGlobalExercise(request));
     }
-    
+
+    @PostMapping("/create/custom")
+    public ResponseEntity<String> createCustomExercise(@Valid @RequestBody CreateExerciseDTO request) {
+        User user = securityUtils.getCurrentUser();
+
+        if (user == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        String response = exerciseService.createCustomExercise(request, user);
+
+        if (response.contains("successfully")) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(400).body(response);
+        }
+    }
+
+
 }

@@ -10,7 +10,6 @@ import com.adripoblado.gymtracker.gymtracker.dto.ExerciseResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.mapper.ExerciseMapper;
 import com.adripoblado.gymtracker.gymtracker.model.Exercise;
 import com.adripoblado.gymtracker.gymtracker.model.User;
-import com.adripoblado.gymtracker.gymtracker.model.enums.Equipment;
 import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
 import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
 import com.adripoblado.gymtracker.gymtracker.repository.ExerciseRepository;
@@ -42,12 +41,22 @@ public class ExerciseService {
     @Transactional
     public String createCustomExercise(CreateExerciseDTO request, User user) {
         Exercise exercise = new Exercise(request, user);
+
+        if (exerciseRepository.existsByNameAndUser(request.name(), user)) {
+            return "Custom exercise with this name already exists";
+        }
+
         exerciseRepository.save(exercise);
         return "Custom exercise created successfully";
     }
 
     public List<ExerciseResponseDTO> getAllGlobalExercises() {
         List<Exercise> exercises = exerciseRepository.findByIsCustom(false).orElse(List.of());
+        return exerciseMapper.toDtoList(exercises);
+    }
+
+    public List<ExerciseResponseDTO> getAllCustomExercises() {
+        List<Exercise> exercises = exerciseRepository.findByUser(securityUtils.getCurrentUser()).orElse(List.of());
         return exerciseMapper.toDtoList(exercises);
     }
 

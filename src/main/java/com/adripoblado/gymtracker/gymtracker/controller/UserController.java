@@ -53,7 +53,7 @@ public class UserController {
     }
     
     @DeleteMapping("/me/delete")
-    public ResponseEntity<String> deleteUser(@RequestParam String confirm) {
+    public ResponseEntity<String> deleteSelfUser(@RequestParam String confirm) {
         User user = securityUtils.getCurrentUser();
 
         if (user == null) {
