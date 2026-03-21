@@ -98,8 +98,18 @@ Before running the project, ensure you have the following installed:
 
 ---
 
+## 🗺️ Roadmap & Future Features
+
+The project is currently under active development. The following core modules are planned for upcoming releases to enhance the user experience and analytical capabilities:
+
+* **💻 Frontend Integration (SPA):** Development of a responsive web interface using **React.js**, featuring secure JWT management (HttpOnly cookies/Memory) and global state handling.
+* **🏋️ Live Training & Workout Builder:** Implementation of a dynamic routine creator. This will include a "Live Session" mode with real-time tracking, rest timers, and persistent storage of sets/reps.
+* **📊 Performance Analytics & Data Visualization:** A dedicated dashboard to track progress using interactive charts (**Chart.js** or **D3.js**). This will visualize strength gains, body metric evolution, and training volume over time.
+
+---
+
 ## ✒️ Author
 
-* **Adrián Cervera** - *Lead Developer* - [YourGitHub](https://github.com/Adripoblado)
+* **Adrián Cervera** - *Lead Developer* - [Adripoblado](https://github.com/Adripoblado)
 
 ---
