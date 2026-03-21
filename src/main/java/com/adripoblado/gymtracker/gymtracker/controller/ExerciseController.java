@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adripoblado.gymtracker.gymtracker.dto.CreateExerciseDTO;
+import com.adripoblado.gymtracker.gymtracker.dto.ExerciseRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.ExerciseResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.model.User;
 import com.adripoblado.gymtracker.gymtracker.security.SecurityUtils;
@@ -16,7 +17,11 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/exercises")
@@ -74,5 +79,41 @@ public class ExerciseController {
         }
     }
 
+    @PutMapping("modify/{id}")
+    public ResponseEntity<?> modifyExercise(@PathVariable Long id, @RequestBody ExerciseRequestDTO request) {
+        User user = securityUtils.getCurrentUser();
 
+        if (user == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        String response = exerciseService.updateCustomExercise(id, request, user);
+
+        if (response.contains("successfully")) {
+            return ResponseEntity.ok(response);
+        } else if (response.contains("Unauthorized")) {
+            return ResponseEntity.status(403).body(response);
+        } else {
+            return ResponseEntity.status(400).body(response);
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteExercise(@PathVariable Long id) {
+        User user = securityUtils.getCurrentUser();
+
+        if (user == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        String response = exerciseService.deleteExercise(id, user);
+
+        if (response.contains("successfully")) {
+            return ResponseEntity.ok(response);
+        } else if (response.contains("Unauthorized")) {
+            return ResponseEntity.status(403).body(response);
+        } else {
+            return ResponseEntity.status(400).body(response);
+        }
+    }
 }

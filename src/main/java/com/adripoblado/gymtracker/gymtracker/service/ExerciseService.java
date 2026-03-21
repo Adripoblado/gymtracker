@@ -9,6 +9,7 @@ import com.adripoblado.gymtracker.gymtracker.dto.ExerciseRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.ExerciseResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.mapper.ExerciseMapper;
 import com.adripoblado.gymtracker.gymtracker.model.Exercise;
+import com.adripoblado.gymtracker.gymtracker.model.RoleEnum;
 import com.adripoblado.gymtracker.gymtracker.model.User;
 import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
 import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
@@ -65,29 +66,37 @@ public class ExerciseService {
         return exerciseMapper.toDtoList(exercises);
     }
 
-    public String updateCustomExercise(Long exerciseId, ExerciseRequestDTO request, String username) {
+    public String updateCustomExercise(Long exerciseId, ExerciseRequestDTO request, User user) {
         Exercise exercise = exerciseRepository.findById(exerciseId).orElseThrow(() -> new RuntimeException("Exercise not found"));
         
-        if (exercise.isCustom() && exercise.getUser().getUsername().equals(username)) {
+        if (exercise.isCustom() && exercise.getUser().getUsername().equals(user.getUsername())) {
             exercise.setName(request.getName());
             exercise.setMuscleGroup(request.getMuscleGroup());
             exercise.setExerciseType(request.getExerciseType());
             exercise.setEquipment(request.getEquipment());
             exerciseRepository.save(exercise);
         } else {
-            throw new RuntimeException("Unauthorized to update this exercise");
+            return "Unauthorized to update this exercise";
         }
 
         return "Custom exercise updated successfully";
     }
 
-    public String deleteExercise(Long exerciseId, String username) {
-        Exercise exercise = exerciseRepository.findById(exerciseId).orElseThrow(() -> new RuntimeException("Exercise not found"));
+    public String deleteExercise(Long exerciseId, User user) {
+        Exercise exercise = exerciseRepository.findById(exerciseId).orElse(null);
+
+        if (exercise == null) {
+            return "Exercise not found";
+        }
         
-        if (exercise.isCustom() && exercise.getUser().getUsername().equals(username)) {
+        if (user.getRole().equals(RoleEnum.ADMIN.name())) {
             exerciseRepository.delete(exercise);
         } else {
-            throw new RuntimeException("Unauthorized to delete this exercise");
+            if (exercise.isCustom() && exercise.getUser().getUsername().equals(user.getUsername())) {
+                exerciseRepository.delete(exercise);
+            } else {
+                return "Unauthorized to delete this exercise";
+            }
         }
         
         return "Exercise deleted successfully";
