@@ -1,0 +1,65 @@
+# =================================================================
+# 🛠️ HERRAMIENTAS E IDEs (Global)
+# =================================================================
+.vscode/
+.idea/
+*.iws
+*.iml
+*.ipr
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+.DS_Store
+Thumbs.db
+
+# =================================================================
+# ☕ BACKEND (Spring Boot)
+# =================================================================
+backend/target/
+backend/build/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/HELP.md
+backend/mvnw
+backend/mvnw.cmd
+
+# Excepciones para compilados específicos si fueran necesarios
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# 🔒 CONFIGURACIÓN SENSIBLE (No subir a GitHub)
+# Es vital que estos archivos se configuren manualmente en el servidor
+backend/src/main/resources/application.properties
+backend/src/main/resources/application.yml
+backend/.env
+
+# =================================================================
+# ⚛️ FRONTEND (React / Vite)
+# =================================================================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Logs de error
+frontend/npm-debug.log*
+frontend/yarn-error.log*
+frontend/yarn-debug.log*
+
+# =================================================================
+# 🧹 OTROS
+# =================================================================
+temp/
+bin/
