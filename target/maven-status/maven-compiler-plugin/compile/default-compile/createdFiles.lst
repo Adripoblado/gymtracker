@@ -1,0 +1,17 @@
+com\adripoblado\gymtracker\gymtracker\GymtrackerApplication.class
+com\adripoblado\gymtracker\gymtracker\config\ApplicationConfig.class
+com\adripoblado\gymtracker\gymtracker\controller\AuthController.class
+com\adripoblado\gymtracker\gymtracker\dto\RegisterRequestDTO.class
+com\adripoblado\gymtracker\gymtracker\service\UserService.class
+com\adripoblado\gymtracker\gymtracker\controller\UserController.class
+com\adripoblado\gymtracker\gymtracker\model\User.class
+com\adripoblado\gymtracker\gymtracker\dto\LoginRequestDTO.class
+com\adripoblado\gymtracker\gymtracker\service\AuthenticationService.class
+com\adripoblado\gymtracker\gymtracker\dto\BodyMetricsDTO.class
+com\adripoblado\gymtracker\gymtracker\model\BodyMetrics.class
+com\adripoblado\gymtracker\gymtracker\repository\UserRepository.class
+com\adripoblado\gymtracker\gymtracker\dto\UpdateUserDTO.class
+com\adripoblado\gymtracker\gymtracker\config\SecurityConfig.class
+com\adripoblado\gymtracker\gymtracker\model\RoleEnum.class
+com\adripoblado\gymtracker\gymtracker\mapper\UserMapper.class
+com\adripoblado\gymtracker\gymtracker\controller\AdminController.class
