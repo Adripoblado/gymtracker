@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.adripoblado.gymtracker.gymtracker.dto.AuthResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.LoginRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.RegisterRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.model.RoleEnum;
@@ -59,11 +60,18 @@ public class AuthenticationService {
         return "User registered successfully.";
     }
 
-    public String login(LoginRequestDTO request) {
+    public AuthResponseDTO login(LoginRequestDTO request) {
         String username = request.username();
         String password = request.password();
 
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = null;
+        
+        if (username.contains("@")) {
+            user = userRepository.findByEmail(username);
+        } else {
+            user = userRepository.findByUsername(username);
+        }
+
         try {
             user.get();        
         } catch (NoSuchElementException e) {
@@ -71,12 +79,12 @@ public class AuthenticationService {
         }
 
         try {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.get().getUsername(), password);
             authenticationManager.authenticate(authToken);
         } catch (Exception e) {
             return null;
         }    
 
-        return jwtService.generateToken(user.get());   
+        return new AuthResponseDTO(jwtService.generateToken(user.get()), username);   
     }
 }

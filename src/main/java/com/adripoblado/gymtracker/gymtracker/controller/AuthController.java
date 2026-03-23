@@ -3,6 +3,7 @@ package com.adripoblado.gymtracker.gymtracker.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.adripoblado.gymtracker.gymtracker.dto.AuthResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.LoginRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.RegisterRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.service.AuthenticationService;
@@ -28,13 +29,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDTO entity) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO entity) {
         System.out.println("Login attempt for username: " + entity.username());
-        String token = authenticationService.login(entity);
-        if (token == null) {
+        AuthResponseDTO response = authenticationService.login(entity);
+        if (response.getToken() == null) {
             return ResponseEntity.status(401).body("Invalid username or password");
         }
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(response);
     }
     
 }
