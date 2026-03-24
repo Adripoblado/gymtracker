@@ -67,6 +67,16 @@ const LoginPage = () => {
                 {error && <p style={styles.error}>{error}</p>}
 
                 <button type="submit" style={styles.button}>Enter</button>
+
+                <div style={styles.footer}>
+                    <span>Don't have an account yet?</span>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/register')}
+                        style={styles.linkButton}>
+                            Register here
+                    </button>
+                </div>
             </form>
         </div>
     );
