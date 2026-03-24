@@ -51,21 +51,32 @@ public class ExerciseService {
         return "Custom exercise created successfully";
     }
 
+    @Transactional
+    public List<ExerciseResponseDTO> getAllExercises() {
+        List<Exercise> exercises = exerciseRepository.findAll();
+        return exerciseMapper.toDtoList(exercises);
+    }
+
+
+    @Transactional
     public List<ExerciseResponseDTO> getAllGlobalExercises() {
         List<Exercise> exercises = exerciseRepository.findByIsCustom(false).orElse(List.of());
         return exerciseMapper.toDtoList(exercises);
     }
 
+    @Transactional
     public List<ExerciseResponseDTO> getAllCustomExercises() {
         List<Exercise> exercises = exerciseRepository.findByUser(securityUtils.getCurrentUser()).orElse(List.of());
         return exerciseMapper.toDtoList(exercises);
     }
 
+    @Transactional
     public List<ExerciseResponseDTO> getCustomExercise(MuscleGroup muscleGroup, ExerciseType exerciseType) {
         List<Exercise> exercises = exerciseRepository.findByMuscleGroupAndExerciseType(muscleGroup, exerciseType).orElse(List.of());
         return exerciseMapper.toDtoList(exercises);
     }
 
+    @Transactional
     public String updateCustomExercise(Long exerciseId, ExerciseRequestDTO request, User user) {
         Exercise exercise = exerciseRepository.findById(exerciseId).orElseThrow(() -> new RuntimeException("Exercise not found"));
         
@@ -82,6 +93,7 @@ public class ExerciseService {
         return "Custom exercise updated successfully";
     }
 
+    @Transactional
     public String deleteExercise(Long exerciseId, User user) {
         Exercise exercise = exerciseRepository.findById(exerciseId).orElse(null);
 

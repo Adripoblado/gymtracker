@@ -35,6 +35,11 @@ public class ExerciseController {
         this.securityUtils = securityUtils;
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<List<ExerciseResponseDTO>> listAllExercises() {
+        return ResponseEntity.ok(exerciseService.getAllExercises());
+    }
+
     @GetMapping("/list/global")
     public ResponseEntity<List<ExerciseResponseDTO>> listGlobalExercises() {
         return ResponseEntity.ok(exerciseService.getAllGlobalExercises());

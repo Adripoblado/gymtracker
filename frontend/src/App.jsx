@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
-import ExerciseList from './pages/ExerciseList';
+import ExercisesPage from './pages/ExercisesPage';
 import WorkoutHistory from './pages/WorkoutHistory';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -18,7 +18,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/exercises" element={<ExerciseList />} />
+            <Route path="/exercises" element={<ExercisesPage />} />
             <Route path="/workouts" element={<WorkoutHistory />} />
             <Route path="/profile" element={<Profile />} />
           </Route>

@@ -7,5 +7,6 @@ public enum Equipment {
     BODYWEIGHT,
     KETTLEBELL,
     CABLE,
+    RUBBER_BANDS,
     OTHER
 }
