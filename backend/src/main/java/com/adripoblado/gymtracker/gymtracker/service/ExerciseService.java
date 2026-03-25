@@ -1,6 +1,8 @@
 package com.adripoblado.gymtracker.gymtracker.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -8,12 +10,16 @@ import com.adripoblado.gymtracker.gymtracker.dto.CreateExerciseDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.ExerciseRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.ExerciseResponseDTO;
 import com.adripoblado.gymtracker.gymtracker.mapper.ExerciseMapper;
+import com.adripoblado.gymtracker.gymtracker.model.Equipment;
 import com.adripoblado.gymtracker.gymtracker.model.Exercise;
+import com.adripoblado.gymtracker.gymtracker.model.ExerciseType;
+import com.adripoblado.gymtracker.gymtracker.model.MuscleGroup;
 import com.adripoblado.gymtracker.gymtracker.model.RoleEnum;
 import com.adripoblado.gymtracker.gymtracker.model.User;
-import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
-import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
+import com.adripoblado.gymtracker.gymtracker.repository.EquipmentRepository;
 import com.adripoblado.gymtracker.gymtracker.repository.ExerciseRepository;
+import com.adripoblado.gymtracker.gymtracker.repository.ExerciseTypeRepository;
+import com.adripoblado.gymtracker.gymtracker.repository.MuscleGroupRepository;
 import com.adripoblado.gymtracker.gymtracker.security.SecurityUtils;
 
 import jakarta.transaction.Transactional;
@@ -22,57 +28,48 @@ import jakarta.transaction.Transactional;
 public class ExerciseService {
 
     final ExerciseRepository exerciseRepository;
+    final MuscleGroupRepository muscleGroupRepository;
+    final ExerciseTypeRepository exerciseTypeRepository;
+    final EquipmentRepository equipmentRepository;
     final SecurityUtils securityUtils;
     private final ExerciseMapper exerciseMapper;
 
-    public ExerciseService(ExerciseRepository exerciseRepository, SecurityUtils securityUtils, ExerciseMapper exerciseMapper) {
+    public ExerciseService(ExerciseRepository exerciseRepository, MuscleGroupRepository muscleGroupRepository, ExerciseTypeRepository exerciseTypeRepository, EquipmentRepository equipmentRepository, SecurityUtils securityUtils, ExerciseMapper exerciseMapper) {
         this.exerciseRepository = exerciseRepository;
+        this.muscleGroupRepository = muscleGroupRepository;
+        this.exerciseTypeRepository = exerciseTypeRepository;
+        this.equipmentRepository = equipmentRepository;
         this.securityUtils = securityUtils;
         this.exerciseMapper = exerciseMapper;
     }
 
     @Transactional
     public String createGlobalExercise(CreateExerciseDTO request) {
-        System.out.println("Attempting to create global exercise: " + request.name());
-        Exercise exercise = new Exercise(request, null);
+        User user = securityUtils.getCurrentUser();
+        Exercise exercise = new Exercise(request.name(), request.description(), !user.getRole().equals("ADMIN"), user);
+
+        Set<MuscleGroup> foundMuscles = new HashSet<>(muscleGroupRepository.findAllById(request.muscleGroupIds()));
+        exercise.setMuscleGroup(foundMuscles);
+
+        Set<ExerciseType> foundTypes = new HashSet<>(exerciseTypeRepository.findAllById(request.exerciseTypeIds()));
+        exercise.setExerciseType(foundTypes);
+
+        Set<Equipment> foundEquipments = new HashSet<>(equipmentRepository.findAllById(request.equipmentIds()));
+        exercise.setEquipment(foundEquipments);
+
         exerciseRepository.save(exercise);
         return "Global exercise created successfully";
     }
 
     @Transactional
-    public String createCustomExercise(CreateExerciseDTO request, User user) {
-        Exercise exercise = new Exercise(request, user);
-
-        if (exerciseRepository.existsByNameAndUser(request.name(), user)) {
-            return "Custom exercise with this name already exists";
-        }
-
-        exerciseRepository.save(exercise);
-        return "Custom exercise created successfully";
+    public List<ExerciseResponseDTO> getExercises(Long muscleGroupId, Long exerciseTypeId, Long equipmentId){
+        List<Exercise> exercises = exerciseRepository.findWithFilters(muscleGroupId, exerciseTypeId, equipmentId);
+        return exerciseMapper.toDtoList(exercises);
     }
 
     @Transactional
     public List<ExerciseResponseDTO> getAllExercises() {
         List<Exercise> exercises = exerciseRepository.findAll();
-        return exerciseMapper.toDtoList(exercises);
-    }
-
-
-    @Transactional
-    public List<ExerciseResponseDTO> getAllGlobalExercises() {
-        List<Exercise> exercises = exerciseRepository.findByIsCustom(false).orElse(List.of());
-        return exerciseMapper.toDtoList(exercises);
-    }
-
-    @Transactional
-    public List<ExerciseResponseDTO> getAllCustomExercises() {
-        List<Exercise> exercises = exerciseRepository.findByUser(securityUtils.getCurrentUser()).orElse(List.of());
-        return exerciseMapper.toDtoList(exercises);
-    }
-
-    @Transactional
-    public List<ExerciseResponseDTO> getCustomExercise(MuscleGroup muscleGroup, ExerciseType exerciseType) {
-        List<Exercise> exercises = exerciseRepository.findByMuscleGroupAndExerciseType(muscleGroup, exerciseType).orElse(List.of());
         return exerciseMapper.toDtoList(exercises);
     }
 

@@ -10,8 +10,6 @@ import com.adripoblado.gymtracker.gymtracker.model.User;
 import com.adripoblado.gymtracker.gymtracker.security.SecurityUtils;
 import com.adripoblado.gymtracker.gymtracker.service.ExerciseService;
 
-import jakarta.validation.Valid;
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/exercises")
@@ -35,53 +33,21 @@ public class ExerciseController {
         this.securityUtils = securityUtils;
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<List<ExerciseResponseDTO>> getExercises(@RequestParam(required = false) Long muscleGroupId, @RequestParam(required = false) Long exerciseTypeId, @RequestParam(required = false) Long equipmentId) {        
+        return ResponseEntity.ok(exerciseService.getExercises(muscleGroupId, exerciseTypeId, equipmentId));
+    }
+    
+
     @GetMapping("/list")
     public ResponseEntity<List<ExerciseResponseDTO>> listAllExercises() {
         return ResponseEntity.ok(exerciseService.getAllExercises());
     }
-
-    @GetMapping("/list/global")
-    public ResponseEntity<List<ExerciseResponseDTO>> listGlobalExercises() {
-        return ResponseEntity.ok(exerciseService.getAllGlobalExercises());
-    }
-
-    @GetMapping("/list/custom")
-    public ResponseEntity<List<ExerciseResponseDTO>> listCustomExercises() {
-        return ResponseEntity.ok(exerciseService.getAllCustomExercises());
-    }
     
-
-    @PostMapping("/create/global")
-    public ResponseEntity<String> createGlobalExercise(@Valid @RequestBody CreateExerciseDTO request) {
-        User user = securityUtils.getCurrentUser();
-
-        if (user == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-
-        if (!user.getRole().equals("ADMIN")) {
-            return ResponseEntity.status(403).body("Forbidden: Only admins can create global exercises");
-        }
-
-        System.out.println("Creating global exercise: " + request.name() + " by admin: " + user.getUsername());
+    @PostMapping("/create")
+    public ResponseEntity<String> createGlobalExercise(@RequestBody CreateExerciseDTO request) {
+        System.out.println(request.toString());
         return ResponseEntity.ok(exerciseService.createGlobalExercise(request));
-    }
-
-    @PostMapping("/create/custom")
-    public ResponseEntity<String> createCustomExercise(@Valid @RequestBody CreateExerciseDTO request) {
-        User user = securityUtils.getCurrentUser();
-
-        if (user == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-
-        String response = exerciseService.createCustomExercise(request, user);
-
-        if (response.contains("successfully")) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(400).body(response);
-        }
     }
 
     @PutMapping("modify/{id}")

@@ -1,11 +1,7 @@
 package com.adripoblado.gymtracker.gymtracker.model;
 
-import java.util.List;
-
-import com.adripoblado.gymtracker.gymtracker.dto.CreateExerciseDTO;
-import com.adripoblado.gymtracker.gymtracker.model.enums.Equipment;
-import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
-import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -24,9 +22,31 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    private List<MuscleGroup> muscleGroup;
-    private List<ExerciseType> exerciseType;
-    private List<Equipment> equipment;
+    private String description;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "exercise_muscle_group",
+        joinColumns = @JoinColumn(name = "exercise_id"),
+        inverseJoinColumns = @JoinColumn(name = "muscle_group_id")
+    )
+    private Set<MuscleGroup> muscleGroup = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "exercise_exercise_type",
+        joinColumns = @JoinColumn(name = "exercise_id"),
+        inverseJoinColumns = @JoinColumn(name = "exercise_type_id")
+    )
+    private Set<ExerciseType> exerciseType = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "exercise_equipment",
+        joinColumns = @JoinColumn(name = "exercise_id"),
+        inverseJoinColumns = @JoinColumn(name = "equipment_id")
+    )
+    private Set<Equipment> equipment = new HashSet<>();
     //private String videoUrl;
     private boolean isCustom;
 
@@ -37,26 +57,11 @@ public class Exercise {
     public Exercise() {
     }
 
-    public Exercise(String name, List<MuscleGroup> muscleGroup, List<ExerciseType> exerciseType, List<Equipment> equipment, boolean isCustom, User user) {
+    public Exercise(String name, String description, boolean isCustom, User user) {
         this.name = name;
-        this.muscleGroup = muscleGroup;
-        this.exerciseType = exerciseType;
-        this.equipment = equipment;
+        this.description = description;
         this.isCustom = isCustom;
         this.user = user;
-    }
-
-        public Exercise(CreateExerciseDTO request, User user) {
-        this.name = request.name();
-        this.muscleGroup = request.muscleGroup();
-        this.exerciseType = request.exerciseType();
-        this.equipment = request.equipment();
-        if (user != null) {
-            this.isCustom = true;
-            this.user = user;
-        } else {
-            this.isCustom = false;
-        }
     }
 
     public long getId() {
@@ -75,27 +80,35 @@ public class Exercise {
         this.name = name;
     }
 
-    public List<MuscleGroup> getMuscleGroup() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<MuscleGroup> getMuscleGroup() {
         return muscleGroup;
     }
 
-    public void setMuscleGroup(List<MuscleGroup> muscleGroup) {
+    public void setMuscleGroup(Set<MuscleGroup> muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
 
-    public List<ExerciseType> getExerciseType() {
+    public Set<ExerciseType> getExerciseType() {
         return exerciseType;
     }
 
-    public void setExerciseType(List<ExerciseType> exerciseType) {
+    public void setExerciseType(Set<ExerciseType> exerciseType) {
         this.exerciseType = exerciseType;
     }
 
-    public List<Equipment> getEquipment() {
+    public Set<Equipment> getEquipment() {
         return equipment;
     }
 
-    public void setEquipment(List<Equipment> equipment) {
+    public void setEquipment(Set<Equipment> equipment) {
         this.equipment = equipment;
     }
 

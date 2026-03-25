@@ -1,23 +1,23 @@
 package com.adripoblado.gymtracker.gymtracker.dto;
 
-import java.util.List;
+import java.util.Set;
 
-import com.adripoblado.gymtracker.gymtracker.model.enums.Equipment;
-import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
-import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
+import com.adripoblado.gymtracker.gymtracker.model.Equipment;
+import com.adripoblado.gymtracker.gymtracker.model.ExerciseType;
+import com.adripoblado.gymtracker.gymtracker.model.MuscleGroup;
 
 public class ExerciseRequestDTO {
 
     private String name;
     private String description;
-    private List<MuscleGroup> muscleGroup;
-    private List<ExerciseType> exerciseType;
-    private List<Equipment> equipment;
+    private Set<MuscleGroup> muscleGroup;
+    private Set<ExerciseType> exerciseType;
+    private Set<Equipment> equipment;
 
     public ExerciseRequestDTO() {
     }
 
-    public ExerciseRequestDTO(String name, String description, List<MuscleGroup> muscleGroup, List<ExerciseType> exerciseType, List<Equipment> equipment) {
+    public ExerciseRequestDTO(String name, String description, Set<MuscleGroup> muscleGroup, Set<ExerciseType> exerciseType, Set<Equipment> equipment) {
         this.name = name;
         this.description = description;
         this.muscleGroup = muscleGroup;
@@ -41,27 +41,27 @@ public class ExerciseRequestDTO {
         this.description = description;
     }
 
-    public List<MuscleGroup> getMuscleGroup() {
+    public Set<MuscleGroup> getMuscleGroup() {
         return muscleGroup;
     }
 
-    public void setMuscleGroup(List<MuscleGroup> muscleGroup) {
+    public void setMuscleGroup(Set<MuscleGroup> muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
 
-    public List<ExerciseType> getExerciseType() {
+    public Set<ExerciseType> getExerciseType() {
         return exerciseType;
     }
 
-    public void setExerciseType(List<ExerciseType> exerciseType) {
+    public void setExerciseType(Set<ExerciseType> exerciseType) {
         this.exerciseType = exerciseType;
     }
 
-    public List<Equipment> getEquipment() {
+    public Set<Equipment> getEquipment() {
         return equipment;
     }
 
-    public void setEquipment(List<Equipment> equipment) {
+    public void setEquipment(Set<Equipment> equipment) {
         this.equipment = equipment;
     }
 

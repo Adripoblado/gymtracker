@@ -2,9 +2,9 @@ package com.adripoblado.gymtracker.gymtracker.dto;
 
 import java.util.List;
 
-import com.adripoblado.gymtracker.gymtracker.model.enums.Equipment;
-import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
-import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
+import com.adripoblado.gymtracker.gymtracker.model.Equipment;
+import com.adripoblado.gymtracker.gymtracker.model.ExerciseType;
+import com.adripoblado.gymtracker.gymtracker.model.MuscleGroup;
 
 public class ExerciseResponseDTO {
 

@@ -2,10 +2,6 @@ package com.adripoblado.gymtracker.gymtracker.dto;
 
 import java.util.List;
 
-import com.adripoblado.gymtracker.gymtracker.model.enums.Equipment;
-import com.adripoblado.gymtracker.gymtracker.model.enums.ExerciseType;
-import com.adripoblado.gymtracker.gymtracker.model.enums.MuscleGroup;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,12 +16,12 @@ public record CreateExerciseDTO(
     String description,
 
     @NotNull(message = "Muscle group is required")
-    List<MuscleGroup> muscleGroup,
+    List<Long> muscleGroupIds,
 
     @NotNull(message = "Exercise type is required")
-    List<ExerciseType> exerciseType,
+    List<Long> exerciseTypeIds,
 
     @NotNull(message = "Equipment is required")
-    List<Equipment> equipment
+    List<Long> equipmentIds
 ) {
 }

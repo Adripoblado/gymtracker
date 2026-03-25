@@ -33,20 +33,20 @@ const ExerciseCard = ({ exercise, onEdit, refreshData }) => {
             
             <div style={styles.tags}>
                 {getTagArray(exercise.muscleGroup).map((muscle) => (
-                <span key={`${exercise.id}-muscle-${muscle}`} style={styles.tagMuscle}>
-                    {muscle.trim()}
+                <span key={`${muscle.id}-muscle-${muscle}`} style={styles.tagMuscle}>
+                    {muscle.name}
                 </span>
                 ))}
 
                 {getTagArray(exercise.exerciseType).map((t) => (
-                    <span key={`${exercise.id}-type-${t}`} style={styles.tagType}>
-                        {t.trim()}
+                    <span key={`${t.id}-type-${t}`} style={styles.tagType}>
+                        {t.name}
                     </span>
                 ))}
 
                 {getTagArray(exercise.equipment).map((item) => (
-                    <span key={`${exercise.id}-equip-${item}`} style={styles.tagEquipment}>
-                        {item.trim()}
+                    <span key={`${item.id}-equip-${item}`} style={styles.tagEquipment}>
+                        {item.name}
                     </span>
                 ))}
             </div>

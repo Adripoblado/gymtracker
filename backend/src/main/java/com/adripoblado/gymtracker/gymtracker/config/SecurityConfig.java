@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .requestMatchers("/users/**").permitAll()
                 .requestMatchers("/exercises/**").permitAll()
                 .requestMatchers("/workouts/**").permitAll()
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
