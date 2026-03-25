@@ -1,68 +1,30 @@
 package com.adripoblado.gymtracker.gymtracker.dto;
 
+import java.util.List;
 import java.util.Set;
 
 import com.adripoblado.gymtracker.gymtracker.model.Equipment;
 import com.adripoblado.gymtracker.gymtracker.model.ExerciseType;
 import com.adripoblado.gymtracker.gymtracker.model.MuscleGroup;
 
-public class ExerciseRequestDTO {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-    private String name;
-    private String description;
-    private Set<MuscleGroup> muscleGroup;
-    private Set<ExerciseType> exerciseType;
-    private Set<Equipment> equipment;
+public record ExerciseRequestDTO(
+    Long id,
 
-    public ExerciseRequestDTO() {
-    }
+    @NotBlank(message = "Name is required")
+    String name,
 
-    public ExerciseRequestDTO(String name, String description, Set<MuscleGroup> muscleGroup, Set<ExerciseType> exerciseType, Set<Equipment> equipment) {
-        this.name = name;
-        this.description = description;
-        this.muscleGroup = muscleGroup;
-        this.exerciseType = exerciseType;
-        this.equipment = equipment;
-    }
+    @NotBlank(message = "Description is required")
+    String description,
 
-    public String getName() {
-        return name;
-    }
+    @NotNull(message = "Muscle group IDs are required")
+    List<Long> muscleGroupIds,
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @NotNull(message = "Exercise type IDs are required")
+    List<Long> exerciseTypeIds,
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<MuscleGroup> getMuscleGroup() {
-        return muscleGroup;
-    }
-
-    public void setMuscleGroup(Set<MuscleGroup> muscleGroup) {
-        this.muscleGroup = muscleGroup;
-    }
-
-    public Set<ExerciseType> getExerciseType() {
-        return exerciseType;
-    }
-
-    public void setExerciseType(Set<ExerciseType> exerciseType) {
-        this.exerciseType = exerciseType;
-    }
-
-    public Set<Equipment> getEquipment() {
-        return equipment;
-    }
-
-    public void setEquipment(Set<Equipment> equipment) {
-        this.equipment = equipment;
-    }
-
-}
+    @NotNull(message = "Equipment IDs are required")
+    List<Long> equipmentIds
+) {}

@@ -7,7 +7,7 @@ import ExerciseModalForm from '../components/exercises/ExerciseModalForm';
 const ExercisesPage = () => {
     const [exercises, setExercises] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [filters, setFilters] = useState({ muscleGroupId: '', exerciseTypeId: '', equipmentId: '' });
+    const [filters, setFilters] = useState({ muscleGroupId: '', exerciseTypeId: '', equipmentId: '', onlyMine: false });
 
     const [catalogs, setCatalogs] = useState({
         muscleGroups:[],
@@ -98,7 +98,8 @@ const styles = {
     pageContainer: { padding: '20px' },
     header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
     addBtn: { padding: '10px 20px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' },
-    spinner: { textAlign: 'center', marginTop: '50px', fontSize: '1.2rem', color: '#666' }
+    spinner: { textAlign: 'center', marginTop: '50px', fontSize: '1.2rem', color: '#666' },
+    filterMineLabel: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px 10px', borderRadius: '5px', border: '1px solid #ddd' }
 };
 
 export default ExercisesPage;

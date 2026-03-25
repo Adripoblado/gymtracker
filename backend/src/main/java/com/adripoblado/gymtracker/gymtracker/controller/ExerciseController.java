@@ -51,14 +51,10 @@ public class ExerciseController {
     }
 
     @PutMapping("modify/{id}")
-    public ResponseEntity<?> modifyExercise(@PathVariable Long id, @RequestBody ExerciseRequestDTO request) {
-        User user = securityUtils.getCurrentUser();
-
-        if (user == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-
-        String response = exerciseService.updateCustomExercise(id, request, user);
+    public ResponseEntity<?> modifyExercise(@RequestBody ExerciseRequestDTO request) {
+        System.out.println(request.toString());
+        
+        String response = exerciseService.updateCustomExercise(request);
 
         if (response.contains("successfully")) {
             return ResponseEntity.ok(response);

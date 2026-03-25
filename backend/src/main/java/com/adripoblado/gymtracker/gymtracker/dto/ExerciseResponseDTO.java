@@ -14,17 +14,19 @@ public class ExerciseResponseDTO {
     private List<MuscleGroup> muscleGroup;
     private List<Equipment> equipment;
     private List<ExerciseType> exerciseType;
+    private Long userId;
 
     public ExerciseResponseDTO() {
     }
 
-    public ExerciseResponseDTO(long id, String name, String description, List<MuscleGroup> muscleGroup, List<Equipment> equipment, List<ExerciseType> exerciseType) {
+    public ExerciseResponseDTO(long id, String name, String description, List<MuscleGroup> muscleGroup, List<Equipment> equipment, List<ExerciseType> exerciseType, Long userId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.muscleGroup = muscleGroup;
         this.equipment = equipment;
         this.exerciseType = exerciseType;
+        this.userId = userId;
     }
 
     public long getId() {
@@ -73,5 +75,20 @@ public class ExerciseResponseDTO {
 
     public void setExerciseType(List<ExerciseType> exerciseType) {
         this.exerciseType = exerciseType;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + 
+            " Name: " + name + 
+            " User ID: " + userId;
     }
 }

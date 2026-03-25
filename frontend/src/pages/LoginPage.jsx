@@ -27,7 +27,9 @@ const LoginPage = () => {
             const response = await api.post('/auth/login', formData);
             
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user_id', response.data.userId);
             localStorage.setItem('username', response.data.username);
+            localStorage.setItem('role', response.data.role);
 
             navigate('/', {replace: true});
         } catch (err) {

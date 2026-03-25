@@ -5,9 +5,9 @@ const ExerciseModalForm = ({ exercise, onClose, onSuccess, catalogs }) => {
     const [formData, setFormData] = useState(() => {
         if (exercise) {
             return {
+                id: exercise.id || 0,
                 name: exercise.name || '',
                 description: exercise.description || '',
-                // Asumimos que el backend devuelve arrays de objetos o IDs. Extraemos el ID por si acaso.
                 muscleGroupIds: exercise.muscleGroups?.map(m => m.id || m) ||[],
                 exerciseTypeIds: exercise.exerciseTypes?.map(t => t.id || t) || [],
                 equipmentIds: exercise.equipments?.map(e => e.id || e) ||[]
@@ -46,6 +46,7 @@ const ExerciseModalForm = ({ exercise, onClose, onSuccess, catalogs }) => {
         }
 
         const payload = {
+            id: formData.id,
             name: formData.name,
             description: formData.description,
             muscleGroupIds: formData.muscleGroupIds.map(item => typeof item === 'object' ? item.id : item),
@@ -57,7 +58,7 @@ const ExerciseModalForm = ({ exercise, onClose, onSuccess, catalogs }) => {
 
         try {
             if (exercise) {
-                await api.put(`/exercises/${exercise.id}`, payload);
+                await api.put(`/exercises/modify/${exercise.id}`, payload);
             } else {
                 console.log({ ...formData })
                 await api.post('/exercises/create', payload);

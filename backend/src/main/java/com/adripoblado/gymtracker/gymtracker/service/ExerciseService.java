@@ -74,14 +74,22 @@ public class ExerciseService {
     }
 
     @Transactional
-    public String updateCustomExercise(Long exerciseId, ExerciseRequestDTO request, User user) {
-        Exercise exercise = exerciseRepository.findById(exerciseId).orElseThrow(() -> new RuntimeException("Exercise not found"));
+    public String updateCustomExercise(ExerciseRequestDTO request) {
+        Exercise exercise = exerciseRepository.findById(request.id()).orElseThrow(() -> new RuntimeException("Exercise not found"));
+        User user = securityUtils.getCurrentUser();
         
         if (exercise.isCustom() && exercise.getUser().getUsername().equals(user.getUsername())) {
-            exercise.setName(request.getName());
-            exercise.setMuscleGroup(request.getMuscleGroup());
-            exercise.setExerciseType(request.getExerciseType());
-            exercise.setEquipment(request.getEquipment());
+            exercise.setName(request.name());
+
+            Set<MuscleGroup> foundMuscles = new HashSet<>(muscleGroupRepository.findAllById(request.muscleGroupIds()));
+            exercise.setMuscleGroup(foundMuscles);
+
+            Set<ExerciseType> foundTypes = new HashSet<>(exerciseTypeRepository.findAllById(request.exerciseTypeIds()));
+            exercise.setExerciseType(foundTypes);
+
+            Set<Equipment> foundEquipments = new HashSet<>(equipmentRepository.findAllById(request.equipmentIds()));
+            exercise.setEquipment(foundEquipments);
+            
             exerciseRepository.save(exercise);
         } else {
             return "Unauthorized to update this exercise";

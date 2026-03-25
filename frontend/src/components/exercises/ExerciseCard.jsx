@@ -2,18 +2,27 @@ import React from 'react';
 import api from '../../services/api';
 
 const ExerciseCard = ({ exercise, onEdit, refreshData }) => {
-    const currentUsername = localStorage.getItem('username');
+    const currentUserId = localStorage.getItem('user_id');
+    const isAdmin = localStorage.getItem('role') === 'ADMIN';
+    
+    const canManage = isAdmin || (Number(exercise.userId) === Number(currentUserId));
+
+    console.log(`User ${currentUserId} can manage ${exercise.userId}? `, canManage);
 
     const handleDelete = async () => {
-        if (window.confirm('Are you sure you want to delete "${exercise.name}"?')) {
+        if (window.confirm(`Are you sure you want to delete ${exercise.name}?`)) {
             try {
-                await api.delete('/exercises/${exercise.id}');
+                await api.delete(`/exercises/${exercise.id}`);
                 refreshData();
             } catch (err) {
                 alert("You don't have permission to delete this exercise.")
             }
         }
     };
+
+    const handleEdit = async () => {
+        
+    }
 
     const getTagArray = (data) => {
         if (!data) return[];
@@ -51,7 +60,7 @@ const ExerciseCard = ({ exercise, onEdit, refreshData }) => {
                 ))}
             </div>
 
-            {exercise.isCustom && exercise.owner === currentUsername && (
+            {canManage && (
                 <div style={styles.actions}>
                     <button onClick={() => onEdit(exercise)} style={styles.editBtn}>Edit</button>
                     <button onClick={handleDelete} style={styles.deleteBtn}>Delete</button>

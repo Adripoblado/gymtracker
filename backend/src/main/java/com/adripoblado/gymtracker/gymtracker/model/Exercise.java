@@ -137,7 +137,7 @@ public class Exercise {
                 ", exerciseType=" + exerciseType +
                 ", equipment=" + equipment +
                 ", isCustom=" + isCustom +
-                ", creator=" + (user != null ? user.getUsername() : "null") +
+                ", creator=" + (user != null ? user.getUsername() + " - " + user.getId() : "null") +
                 '}';
     }
 }

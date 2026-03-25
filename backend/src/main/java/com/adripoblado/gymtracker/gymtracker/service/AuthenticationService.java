@@ -85,6 +85,6 @@ public class AuthenticationService {
             return null;
         }    
 
-        return new AuthResponseDTO(jwtService.generateToken(user.get()), username);   
+        return new AuthResponseDTO(jwtService.generateToken(user.get()), user.get().getId(), username, user.get().getRole());   
     }
 }
