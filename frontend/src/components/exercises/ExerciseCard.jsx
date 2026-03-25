@@ -1,28 +1,22 @@
-import React from 'react';
+import React, { memo } from 'react';
 import api from '../../services/api';
 
-const ExerciseCard = ({ exercise, onEdit, refreshData }) => {
+const ExerciseCard = memo(({ exercise, onEdit, refreshData }) => {
     const currentUserId = localStorage.getItem('user_id');
     const isAdmin = localStorage.getItem('role') === 'ADMIN';
     
     const canManage = isAdmin || (Number(exercise.userId) === Number(currentUserId));
 
-    console.log(`User ${currentUserId} can manage ${exercise.userId}? `, canManage);
-
     const handleDelete = async () => {
         if (window.confirm(`Are you sure you want to delete ${exercise.name}?`)) {
             try {
-                await api.delete(`/exercises/${exercise.id}`);
+                await api.delete(`/exercises/delete/${exercise.id}`);
                 refreshData();
             } catch (err) {
                 alert("You don't have permission to delete this exercise.")
             }
         }
     };
-
-    const handleEdit = async () => {
-        
-    }
 
     const getTagArray = (data) => {
         if (!data) return[];
@@ -68,7 +62,7 @@ const ExerciseCard = ({ exercise, onEdit, refreshData }) => {
             )}
         </div>
     );
-};
+});
 
 const styles = {
     card: { backgroundColor: 'white', borderRadius: '10px', padding: '15px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', border: '1px solid #eee', display: 'flex', flexDirection: 'column', height: 'auto', minHeight: '220px', width: '100%', boxSizing: 'border-box', justifyContent: 'space-between' },

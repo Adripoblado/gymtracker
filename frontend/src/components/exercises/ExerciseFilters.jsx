@@ -3,7 +3,11 @@ import React from 'react';
 const ExerciseFilters = ({ filters, setFilters, catalogs }) => {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFilters({ ...filters, [name]: type === 'checkbox' ? checked : value });
+        const finalValue = type === 'checkbox' ? checked : value;
+        setFilters(prev => ({ 
+            ...prev,
+            [name]: finalValue
+         }));
     };
 
     return (
@@ -36,7 +40,7 @@ const ExerciseFilters = ({ filters, setFilters, catalogs }) => {
                 <input
                     type="checkbox"
                     name="onlyMine"
-                    checked={filters.onlyMine}
+                    checked={filters.onlyMine || false}
                     onChange={handleChange}
                     style={styles.checkbox}
                 />

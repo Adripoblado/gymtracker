@@ -14,6 +14,9 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     public boolean existsByNameAndUser(String name, User user);
 
     @Query("SELECT DISTINCT e FROM Exercise e " +
+        "LEFT JOIN FETCH e.muscleGroup " +
+        "LEFT JOIN FETCH e.exerciseType " +
+        "LEFT JOIN FETCH e.equipment " +
         "LEFT JOIN e.muscleGroup mg " + 
         "LEFT JOIN e.exerciseType et " + 
         "LEFT JOIN e.equipment eq " + 

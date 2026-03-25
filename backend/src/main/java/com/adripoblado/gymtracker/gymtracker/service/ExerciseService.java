@@ -99,17 +99,25 @@ public class ExerciseService {
     }
 
     @Transactional
-    public String deleteExercise(Long exerciseId, User user) {
+    public String deleteExercise(Long exerciseId) {
         Exercise exercise = exerciseRepository.findById(exerciseId).orElse(null);
 
         if (exercise == null) {
             return "Exercise not found";
         }
+
+        User user = securityUtils.getCurrentUser();
+
+        if (user == null) {
+            return "Unauthorized";
+        }
         
         if (user.getRole().equals(RoleEnum.ADMIN.name())) {
+            System.out.println("ADMIN deleted: " + exercise.getName());
             exerciseRepository.delete(exercise);
         } else {
-            if (exercise.isCustom() && exercise.getUser().getUsername().equals(user.getUsername())) {
+            if (exercise.getUser().getUsername().equals(user.getUsername())) {
+                System.out.println(user.getUsername() + " deleted: " + exercise.getName());
                 exerciseRepository.delete(exercise);
             } else {
                 return "Unauthorized to delete this exercise";

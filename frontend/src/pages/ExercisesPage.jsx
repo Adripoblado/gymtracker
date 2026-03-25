@@ -18,6 +18,16 @@ const ExercisesPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState(null);
 
+    const filteredExercises = React.useMemo(() => {
+        const currentUserId = localStorage.getItem('user_id');
+        const isAdmin = localStorage.getItem('role') === 'ADMIN';
+
+        return exercises.filter(exercise => {
+            if (!filters.onlyMine) return true;
+            return isAdmin || (Number(exercise.userId) === Number(currentUserId));
+        });
+    }, [exercises, filters.onlyMine]);
+
     const fetchCatalogs = async () => {
         try {
             const [resMuscle, resType, resEquip] = await Promise.all([
@@ -56,10 +66,10 @@ const ExercisesPage = () => {
         fetchExercises();
     }, [filters]);
 
-    const handleOpenModal = (exercise = null) => {
+    const handleOpenModal = React.useCallback((exercise = null) => {
         setSelectedExercise(exercise);
         setIsModalOpen(true);
-    };
+    }, []);
 
     return (
         <div style={styles.pageContainer}>
@@ -76,7 +86,7 @@ const ExercisesPage = () => {
                 <div style={styles.spinner}>Loading exercises...</div>
             ) : (
                 <ExerciseList 
-                    exercises={exercises} 
+                    exercises={filteredExercises} 
                     onEdit={handleOpenModal} 
                     refreshData={fetchExercises}
                 />

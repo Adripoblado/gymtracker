@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.adripoblado.gymtracker.gymtracker.dto.CreateExerciseDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.ExerciseRequestDTO;
 import com.adripoblado.gymtracker.gymtracker.dto.ExerciseResponseDTO;
-import com.adripoblado.gymtracker.gymtracker.model.User;
-import com.adripoblado.gymtracker.gymtracker.security.SecurityUtils;
 import com.adripoblado.gymtracker.gymtracker.service.ExerciseService;
 
 import java.util.List;
@@ -26,11 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
-    private final SecurityUtils securityUtils;
 
-    public ExerciseController(ExerciseService exerciseService, SecurityUtils securityUtils) {
+    public ExerciseController(ExerciseService exerciseService) {
         this.exerciseService = exerciseService;
-        this.securityUtils = securityUtils;
     }
 
     @GetMapping("/get")
@@ -67,13 +63,7 @@ public class ExerciseController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteExercise(@PathVariable Long id) {
-        User user = securityUtils.getCurrentUser();
-
-        if (user == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-
-        String response = exerciseService.deleteExercise(id, user);
+        String response = exerciseService.deleteExercise(id);
 
         if (response.contains("successfully")) {
             return ResponseEntity.ok(response);
