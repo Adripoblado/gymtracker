@@ -57,18 +57,36 @@ const ExerciseModalForm = ({ exercise, onClose, onSuccess, catalogs }) => {
         console.log("Sending Payload:", payload);
 
         try {
-            if (exercise) {
-                await api.put(`/exercises/modify/${exercise.id}`, payload);
-            } else {
-                console.log({ ...formData })
-                await api.post('/exercises/create', payload);
-            }
+            const response = exercise 
+            ? await api.put(`/exercises/modify/${exercise.id}`, payload)
+            : await api.post('/exercises/create', payload);
+
+            console.log("Response data:", response.data);
+            
             onSuccess();
             onClose();
         } catch (error) {
-            console.error(error);
-            alert("Error while saving the exercise!");
-        }
+            if (error.response) {
+                console.log("Backend Response (Error):", error);
+                const status = error.response.status;
+                
+                if (Number(status) === 401) {
+                    console.warn("Unauthorized! Redirecting to login...");
+                    localStorage.clear();
+                    Navigate('/login');
+                    return;
+                }
+            
+                if (Number(status) === 403) {
+                    alert("You don't have permission to perform this action.")
+                } else {
+                    alert(`Error ${status}: ${error.response.data.message || "Error while saving!"}`)
+                }     
+            }else {
+                console.error("Network or Unkown Error:", error);
+                alert("Unable to connect to the server.")
+            }      
+        } 
     };
 
     const renderPills = (title, fieldName, catalogArray) => (

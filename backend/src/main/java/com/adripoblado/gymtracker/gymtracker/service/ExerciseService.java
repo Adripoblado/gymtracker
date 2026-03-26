@@ -44,8 +44,13 @@ public class ExerciseService {
     }
 
     @Transactional
-    public String createGlobalExercise(CreateExerciseDTO request) {
+    public String createExercise(CreateExerciseDTO request) {
         User user = securityUtils.getCurrentUser();
+
+        if (user == null) {
+            return "No user authenticated";
+        }
+
         Exercise exercise = new Exercise(request.name(), request.description(), !user.getRole().equals("ADMIN"), user);
 
         Set<MuscleGroup> foundMuscles = new HashSet<>(muscleGroupRepository.findAllById(request.muscleGroupIds()));
@@ -77,6 +82,10 @@ public class ExerciseService {
     public String updateCustomExercise(ExerciseRequestDTO request) {
         Exercise exercise = exerciseRepository.findById(request.id()).orElseThrow(() -> new RuntimeException("Exercise not found"));
         User user = securityUtils.getCurrentUser();
+
+        if (user == null) {
+            return "No user authenticated";
+        }
         
         if (exercise.isCustom() && exercise.getUser().getUsername().equals(user.getUsername())) {
             exercise.setName(request.name());
@@ -95,7 +104,7 @@ public class ExerciseService {
             return "Unauthorized to update this exercise";
         }
 
-        return "Custom exercise updated successfully";
+        return "Exercise updated successfully";
     }
 
     @Transactional
