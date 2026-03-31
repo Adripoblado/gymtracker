@@ -9,16 +9,18 @@ public class WorkoutResponseDTO {
     private String startTime;
     private String endTime;
     private List<WorkoutExerciseResponseDTO> exercises;
+    private Long userId;
 
     public WorkoutResponseDTO() {
     }
 
-    public WorkoutResponseDTO(Long id, String name, String startTime, String endTime, List<WorkoutExerciseResponseDTO> exercises) {
+    public WorkoutResponseDTO(Long id, String name, String startTime, String endTime, List<WorkoutExerciseResponseDTO> exercises, Long userId) {
         this.id = id;
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
         this.exercises = exercises;
+        this.userId = userId;
     }
 
     public Long getId() {
@@ -61,5 +63,22 @@ public class WorkoutResponseDTO {
         this.exercises = exercises;
     }
 
-    
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkoutResponseDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", exercises=" + exercises +
+                '}';
+    }
 }

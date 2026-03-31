@@ -19,14 +19,24 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        String jwtError = (String) request.getAttribute("jwt_error");
+        
         response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("error", "Unauthorized");
-        body.put("message", "Your session has expired or token is not valid.");
         body.put("path", request.getServletPath());
+
+        if ("EXPIRED".equals(jwtError)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+            body.put("error", "Unauthorized");
+            body.put("message", "Your session has expired or token is not valid.");
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            body.put("status", HttpServletResponse.SC_NOT_FOUND);
+            body.put("error", "Not found");
+            body.put("message", "Requested resourced either doesn't exist or you don't have the needed permissions.");
+        }
         
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);

@@ -4,7 +4,8 @@ import java.util.List;
 
 public class WorkoutExerciseResponseDTO {
 
-    private Long id;
+    private Long exerciseId;
+    private String exerciseName;
     private int orderIndex;
     private int setAmount;
     private List<WorkoutSetResponseDTO> sets;
@@ -12,19 +13,28 @@ public class WorkoutExerciseResponseDTO {
     public WorkoutExerciseResponseDTO() {
     }
 
-        public WorkoutExerciseResponseDTO(Long id, int orderIndex, int setAmount, List<WorkoutSetResponseDTO> sets) {
-        this.id = id;
+        public WorkoutExerciseResponseDTO(Long exerciseId, String exerciseName, int orderIndex, int setAmount, List<WorkoutSetResponseDTO> sets) {
+        this.exerciseId = exerciseId;
+        this.exerciseName = exerciseName;
         this.orderIndex = orderIndex;
         this.setAmount = setAmount;
         this.sets = sets;
     }
 
-    public Long getId() {
-        return id;
+    public Long getExerciseId() {
+        return exerciseId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setExerciseId(Long exerciseId) {
+        this.exerciseId = exerciseId;
+    }
+
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
     }
 
     public int getOrderIndex() {
@@ -49,5 +59,15 @@ public class WorkoutExerciseResponseDTO {
 
     public void setSets(List<WorkoutSetResponseDTO> sets) {
         this.sets = sets;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkoutExerciseResponseDTO{" +
+                "exerciseId=" + exerciseId +
+                ", orderIndex=" + orderIndex +
+                ", setAmount=" + setAmount +
+                ", sets=" + sets +
+                '}';
     }
 }

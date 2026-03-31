@@ -23,10 +23,10 @@ import jakarta.transaction.Transactional;
 @Service
 public class WorkoutService {
 
-    SecurityUtils securityUtils;
-    ExerciseRepository exerciseRepository;
-    WorkoutRepository workoutRepository;
-    WorkoutMapper workoutMapper;
+    final SecurityUtils securityUtils;
+    final ExerciseRepository exerciseRepository;
+    final WorkoutRepository workoutRepository;
+    final WorkoutMapper workoutMapper;
 
     public WorkoutService(SecurityUtils securityUtils, ExerciseRepository exerciseRepository, WorkoutRepository workoutRepository, WorkoutMapper workoutMapper) {
         this.securityUtils = securityUtils;
@@ -77,5 +77,24 @@ public class WorkoutService {
 
         workoutRepository.deleteById(workoutId);
         return "Workout deleted successfully";
+    }
+
+    @Transactional
+    public List<WorkoutResponseDTO> getFilteredWorkouts(String startDate, String endDate, Long muscleGroupId) {
+        User user = securityUtils.getCurrentUser();
+        //List<Workout> workouts = workoutRepository.findWorkoutsWithFilters(user.getId(), muscleGroupId, startDate, endDate);
+        List<Workout> workouts = workoutRepository.findWorkoutsWithFilters(user.getId(), muscleGroupId);
+        
+        for (Workout workout : workouts) {
+            System.out.println("Workout: " + workout.getName());
+            workout.getExercises().forEach(exercise -> {
+                System.out.println("  Exercise: " + exercise.getExercise().getName() + " (ID: " + exercise.getExercise().getId() + ")");
+                exercise.getExercise().getMuscleGroup().forEach(mg -> {
+                    System.out.println("    Muscle Group: " + mg.getName());
+                });
+            });
+        }
+
+        return workouts.stream().map(workoutMapper::toDto).collect(Collectors.toList());
     }
 }

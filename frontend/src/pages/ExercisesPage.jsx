@@ -3,17 +3,15 @@ import api from '../services/api';
 import ExerciseFilters from '../components/exercises/ExerciseFilters';
 import ExerciseList from '../components/exercises/ExerciseList';
 import ExerciseModalForm from '../components/exercises/ExerciseModalForm';
+import { useCatalogs } from '../hooks/useCatalogs';
 
 const ExercisesPage = () => {
     const [exercises, setExercises] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [filters, setFilters] = useState({ muscleGroupId: '', exerciseTypeId: '', equipmentId: '', onlyMine: false });
 
-    const [catalogs, setCatalogs] = useState({
-        muscleGroups:[],
-        exerciseTypes:[],
-        equipments:[]
-    });
+    const { muscleGroups, exerciseTypes, equipments } = useCatalogs();
+    const catalogs = { muscleGroups: muscleGroups || [], exerciseTypes: exerciseTypes || [], equipments: equipments || [] };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState(null);
@@ -28,24 +26,6 @@ const ExercisesPage = () => {
         });
     }, [exercises, filters.onlyMine]);
 
-    const fetchCatalogs = async () => {
-        try {
-            const [resMuscle, resType, resEquip] = await Promise.all([
-                api.get('/api/catalogs/muscle-groups'),
-                api.get('/api/catalogs/exercise-types'),
-                api.get('/api/catalogs/equipments')
-            ]);
-            
-            setCatalogs({
-                muscleGroups: resMuscle.data,
-                exerciseTypes: resType.data,
-                equipments: resEquip.data
-            });
-        } catch (err) {
-            console.error("Error loading catalogs: ", err);
-        }
-    };
-
     const fetchExercises = async () => {
         setIsLoading(true);
         try {
@@ -57,10 +37,6 @@ const ExercisesPage = () => {
             setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        fetchCatalogs();
-    },[]);
 
     useEffect(() => {
         fetchExercises();

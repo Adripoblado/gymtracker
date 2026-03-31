@@ -98,7 +98,7 @@ const ExerciseModalForm = ({ exercise, onClose, onSuccess, catalogs }) => {
                     return (
                         <button
                             key={item.id}
-                            type="button" // MUY IMPORTANTE: Para que no envíe el formulario al hacer clic
+                            type="button" 
                             onClick={() => handleToggleSelection(fieldName, item.id)}
                             style={{
                                 ...styles.pill,

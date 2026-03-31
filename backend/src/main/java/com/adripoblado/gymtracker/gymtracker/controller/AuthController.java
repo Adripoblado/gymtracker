@@ -28,7 +28,7 @@ public class AuthController {
         return authenticationService.register(entity);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login") //TODO: Change to /login and return 401 on failure, 200 with token on success
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO entity) {
         System.out.println("Login attempt for username: " + entity.username());
         AuthResponseDTO response = authenticationService.login(entity);

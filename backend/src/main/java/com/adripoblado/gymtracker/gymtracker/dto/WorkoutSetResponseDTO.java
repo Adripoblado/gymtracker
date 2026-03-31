@@ -48,4 +48,14 @@ public class WorkoutSetResponseDTO {
     public void setReps(int reps) {
         this.reps = reps;
     }
+
+    @Override
+    public String toString() {
+        return "WorkoutSetResponseDTO{" +
+                "id=" + id +
+                ", setNumber=" + setNumber +
+                ", weight=" + weight +
+                ", reps=" + reps +
+                '}';
+    }
 }
